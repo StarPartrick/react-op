@@ -4,15 +4,15 @@ import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons"
 import "./index.less"
 import { LoginType } from "@/api/types"
 import { getTokenData } from "@/api/index"
-import userStore from "@/store/index"
+import { userTokenStore } from "@/store/index"
 import { useNavigate } from "react-router-dom"
 const Login: React.FC = () => {
   const navigate = useNavigate()
   const onFinish = async (values: LoginType) => {
     console.log(values)
-
+    
     const res = await getTokenData(values)
-    userStore.token = res.data.data.token
+    userTokenStore.token = res.data.token
     navigate("/")
     message.success("登录成功")
   }

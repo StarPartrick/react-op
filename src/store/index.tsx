@@ -1,17 +1,7 @@
-import { makeAutoObservable } from "mobx"
-import { makePersistable } from "mobx-persist-store" // 引入相关api
+import userTokenStore from "./UserTokenStore"
+import userInfoStore from "./UserInfoStore"
 
-class UserTokenStore {
-  token = "" // 定义数据
-  constructor() {
-    makeAutoObservable(this),
-      makePersistable(this, {
-        name: "Token",
-        properties: ["token"],
-        storage: window.localStorage,
-      })
-  }
+export {
+  userTokenStore,
+  userInfoStore
 }
-
-const userStore = new UserTokenStore()
-export default userStore

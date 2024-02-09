@@ -2,6 +2,9 @@ import { Layout, Menu, Popconfirm } from "antd"
 import { HomeOutlined, DiffOutlined, EditOutlined, LogoutOutlined } from "@ant-design/icons"
 import { Outlet, useLocation, useNavigate } from "react-router-dom"
 import "./index.less"
+import { useEffect, useState } from "react"
+import { getUserInfo } from "@/api/index"
+import { userInfoStore, userTokenStore } from '@/store/index'
 
 const { Header, Sider } = Layout
 
@@ -16,7 +19,21 @@ const GeekLayout = () => {
   // 处理高亮问题
   const locations = useLocation()
   const currentRoute = locations.pathname
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  //@ts-expect-error
+  const [name, setName] = useState(userInfoStore.userInfo?.name)
 
+  useEffect(() => {
+    getUserInfo().then((res) => {
+      userInfoStore.userInfo = res.data
+      setName(res.data?.name)
+    })
+  }, [])
+  const onConfirm = () => {
+    userTokenStore.token = ''
+    userInfoStore.userInfo = {}
+    navigate('/login')
+  }
   const menuListData = [
     {
       label: "首页",
@@ -39,9 +56,9 @@ const GeekLayout = () => {
       <Header className="header">
         <div className="logo" />
         <div className="user-info">
-          <span className="user-name">user.name</span>
+          <span className="user-name">{name}</span>
           <span className="user-logout">
-            <Popconfirm title="是否确认退出？" okText="退出" cancelText="取消">
+            <Popconfirm title="是否确认退出？" onConfirm={onConfirm} okText="退出" cancelText="取消">
               <LogoutOutlined /> 退出
             </Popconfirm>
           </span>
